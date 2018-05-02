@@ -18,11 +18,12 @@ function john_pets_post_type()
     register_post_type('pets',
                        array(
                            'labels'      => array(
-                               'name'          => __('Products'),
-                               'singular_name' => __('Product'),
+                               'name'          => __('Pet'),
+                               'singular_name' => __('Pets'),
                            ),
                            'public'      => true,
-                           'has_archive' => true,
+                           'has_archive' => true, 
+                           'show_in_menu' => true,
                        )
     );
 }
