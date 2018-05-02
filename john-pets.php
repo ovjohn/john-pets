@@ -30,4 +30,18 @@ function john_pets_post_type()
 
 add_action('init', 'john_pets_post_type');
 
+//Funtion que permite filtrar solo 5 post...
+function search_filter($query) {
+  
+  //echo var_dump($query);
+  //print_r($query);
+   if($query->get('post_type') == 'pets'){
+   	
+   	$query->set('posts_per_page',3);
+  }
+  return $query;
+}
+
+add_action('pre_get_posts','search_filter');
+
  ?>
