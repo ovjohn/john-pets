@@ -12,4 +12,21 @@ License URI:  https://www.gnu.org/licenses/gpl-2.0.html
 Text Domain:  wporg
 */
 
+
+function john_pets_post_type()
+{
+    register_post_type('pets',
+                       array(
+                           'labels'      => array(
+                               'name'          => __('Products'),
+                               'singular_name' => __('Product'),
+                           ),
+                           'public'      => true,
+                           'has_archive' => true,
+                       )
+    );
+}
+
+add_action('init', 'john_pets_post_type');
+
  ?>
