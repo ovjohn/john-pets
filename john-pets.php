@@ -67,10 +67,41 @@ $args = [
 'show_ui'           => true,
 'show_admin_column' => true,
 'query_var'         => true,
-'rewrite'           => ['slug' => 'Pet'],
+'rewrite'           => ['slug' => 'category_pets'],
 ];
-register_taxonomy('pet', ['pets'], $args);
+register_taxonomy('category_pets', ['pets'], $args);
 }
 add_action('init', 'john_pets_register_taxonomy');
 
- ?>
+
+//Funcion que filtra la asociacion de etiquetas
+
+function john_pets_save_post( $post_id ) {
+
+	
+
+	//$post_title = get_the_title( $post_id );
+	//$post_url = get_permalink( $post_id );
+	$post_type = get_post_type($post_id);
+
+	if ($post_type === 'pets' && get_post_status( $post_id ) === 'publish' ) {
+
+		$terms = get_the_terms( $post_id, 'category_pets'); 
+		
+
+		foreach ($terms as $term) {
+			$term->name 
+		}
+		//wp_die($terms[0]->name);
+		//echo "jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj"	;
+		//echo $post_id;
+		//print_r ($terms);
+		//echo "tttrewwqdvjkjkkkkkkkkkkkkkkkkkkkkkkkkkkkkkj"	;
+	}
+
+}
+
+add_action( 'save_post', 'john_pets_save_post' , 10, 1);
+
+?>
+
