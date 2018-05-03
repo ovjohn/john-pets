@@ -18,7 +18,7 @@ function john_pets_post_type()
     register_post_type('pets',
                        array(
                            'labels'      => array(
-                               'name'          => __('Pet'),
+                               'name'          => __('Pets'),
                                'singular_name' => __('Pets'),
                            ),
                            'public'      => true,
@@ -30,7 +30,7 @@ function john_pets_post_type()
 
 add_action('init', 'john_pets_post_type');
 
-//Funtion que permite filtrar solo 5 post...
+//Funtion que permite filtrar solo 5 post...++++++++++++++++++++++++++++++++++++++++++++++++++++
 function search_filter($query) {
   
   //echo var_dump($query);
@@ -43,5 +43,34 @@ function search_filter($query) {
 }
 
 add_action('pre_get_posts','search_filter');
+
+//Funcion que permite crear una Taxonomia personalizada++++++++++++++++++++++++++++++++++++++++++
+
+function john_pets_register_taxonomy()
+{
+    $labels = [
+        'name'              => _x(' Category Pets', 'taxonomy general name'),
+'singular_name'     => _x('Category Pet', 'taxonomy singular name'),
+'search_items'      => __('Search Pets'),
+'all_items'         => __('All Pets'),
+'parent_item'       => __('Parent Pet'),
+'parent_item_colon' => __('Parent Pet:'),
+'edit_item'         => __('Edit Pet'),
+'update_item'       => __('Update Pet'),
+'add_new_item'      => __('Add New Pet'),
+'new_item_name'     => __('New Pet Name'),
+'menu_name'         => __('Category Pet'),
+];
+$args = [
+'hierarchical'      => true, // make it hierarchical (like categories)
+'labels'            => $labels,
+'show_ui'           => true,
+'show_admin_column' => true,
+'query_var'         => true,
+'rewrite'           => ['slug' => 'Pet'],
+];
+register_taxonomy('pet', ['pets'], $args);
+}
+add_action('init', 'john_pets_register_taxonomy');
 
  ?>
