@@ -2,14 +2,14 @@
 
 /*
 Plugin Name:  Pets
-Plugin URI:   https://developer.wordpress.org/plugins/the-basics/
+Plugin URI:   https://github.com/ovjohn/john-pets
 Description:  Basic Plugin Pets
 Version:      1.0
 Author:       John
-Author URI:   https://developer.wordpress.org/
+Author URI:   https://github.com/ovjohn/
 License:      GPL2
 License URI:  https://www.gnu.org/licenses/gpl-2.0.html
-Text Domain:  wporg
+Text Domain:  john
 */
 
 
@@ -30,22 +30,20 @@ function john_pets_post_type()
 
 add_action('init', 'john_pets_post_type');
 
-//Funtion que permite filtrar solo 5 post...++++++++++++++++++++++++++++++++++++++++++++++++++++
+//Function for display last 5 entries of this custom post-type
 function search_filter($query) {
   
-  //echo var_dump($query);
-  //print_r($query);
-   if($query->get('post_type') == 'pets'){
+    if($query->get('post_type') == 'pets'){
    	
-   	$query->set('posts_per_page',3);
+   	$query->set('posts_per_page',5);
   }
   return $query;
 }
 
 add_action('pre_get_posts','search_filter');
 
-//Funcion que permite crear una Taxonomia personalizada++++++++++++++++++++++++++++++++++++++++++
 
+//Funcion que permite crear una Taxonomia personalizada
 function john_pets_register_taxonomy()
 {
     $labels = [
@@ -62,7 +60,7 @@ function john_pets_register_taxonomy()
 'menu_name'         => __('Category Pet'),
 ];
 $args = [
-'hierarchical'      => true, // make it hierarchical (like categories)
+'hierarchical'      => true, 
 'labels'            => $labels,
 'show_ui'           => true,
 'show_admin_column' => true,
@@ -75,13 +73,8 @@ add_action('init', 'john_pets_register_taxonomy');
 
 
 //Funcion que filtra la asociacion de etiquetas
-
 function john_pets_save_post( $post_id, $post ) {
 
-	
-
-	//$post_title = get_the_title( $post_id );
-	//$post_url = get_permalink( $post_id );
 	$post_type = get_post_type($post_id);
 	$error = false;
 
@@ -90,46 +83,29 @@ function john_pets_save_post( $post_id, $post ) {
 		$terms = get_the_terms( $post_id, 'category_pets'); 
 		  
         
-		foreach ($terms as $term) {
+		if ($terms) {
+			foreach ($terms as $term) {
 			
-			//$term->name;
-			
-			if (substr($term->name, 0, 5)   != 'Pets-') {
-				$error = true;
+						
+				if (substr($term->name, 0, 5)   != 'Pets-') {
+					$error = true;
+				}
 			}
+		}else{
+				$error = true;
 		}
-
+			
+		
 		if ($error) {
+	
+				$post->post_status = 'draft';
 
-			$post->post_status = 'draft';
+				wp_update_post( $post, $error );
 
-			wp_update_post( $post, $error );
-
-
-			wp_die('Alerta '. '<a href="'.get_edit_post_link($post_id) . '">Precione aqui para intertar</a>');
+				wp_die('Please enter a category that starts with the prefix "Pets-"'. '<a href="'.get_edit_post_link($post_id) . '"><br>Click here to go to edit</a>');
 			
-			
-		}
-
-
-
-
-
-
-
-
-
-
-
-
-
-				//wp_die($terms[0]->name);
-		//echo "jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj"	;
-		//echo $post_id;
-		//print_r ($terms);
-		//echo "tttrewwqdvjkjkkkkkkkkkkkkkkkkkkkkkkkkkkkkkj"	;
+			}
 	}
-
 }
 
 add_action( 'save_post', 'john_pets_save_post' , 10, 2);
